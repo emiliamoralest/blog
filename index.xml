@@ -6,15 +6,15 @@
       version="2.0">
 <channel>
 <title>Course_blog_EM</title>
-<link>https://your-website-url.example.com/</link>
-<atom:link href="https://your-website-url.example.com/index.xml" rel="self" type="application/rss+xml"/>
+<link>https://emiliamoralest.github.io/blog/</link>
+<atom:link href="https://emiliamoralest.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A blog built with Quarto</description>
 <generator>quarto-1.8.24</generator>
 <lastBuildDate>Sun, 05 Oct 2025 22:00:00 GMT</lastBuildDate>
 <item>
   <title>Hola</title>
   <dc:creator>Emilia Morales</dc:creator>
-  <link>https://your-website-url.example.com/posts/How to make a Quarto blog/Chao.html</link>
+  <link>https://emiliamoralest.github.io/blog/posts/How to make a Quarto blog/Chao.html</link>
   <description><![CDATA[ 
 
 
@@ -29,14 +29,14 @@
   <category>news</category>
   <category>code</category>
   <category>analysis</category>
-  <guid>https://your-website-url.example.com/posts/How to make a Quarto blog/Chao.html</guid>
+  <guid>https://emiliamoralest.github.io/blog/posts/How to make a Quarto blog/Chao.html</guid>
   <pubDate>Sun, 05 Oct 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://your-website-url.example.com/posts/How to make a Quarto blog" medium="image"/>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/How to make a Quarto blog" medium="image"/>
 </item>
 <item>
   <title>How to make a post</title>
   <dc:creator>Emilia Morales</dc:creator>
-  <link>https://your-website-url.example.com/posts/How to make a Quarto blog/</link>
+  <link>https://emiliamoralest.github.io/blog/posts/How to make a Quarto blog/</link>
   <description><![CDATA[ 
 
 
@@ -50,9 +50,9 @@
   <category>news</category>
   <category>code</category>
   <category>analysis</category>
-  <guid>https://your-website-url.example.com/posts/How to make a Quarto blog/</guid>
+  <guid>https://emiliamoralest.github.io/blog/posts/How to make a Quarto blog/</guid>
   <pubDate>Sun, 05 Oct 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://your-website-url.example.com/posts/How to make a Quarto blog/carmela.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/How to make a Quarto blog/carmela.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
