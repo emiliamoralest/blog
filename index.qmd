@@ -1,5 +1,5 @@
 ---
-title: "Course blog EM"
+title: "Applied Bioinformatics blog by Emilia"
 listing:
   contents: posts
   feed: true

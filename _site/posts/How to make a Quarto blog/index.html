@@ -122,8 +122,6 @@ ul.task-list li input[type="checkbox"] {
       <h1 class="title">Day 1: Data Management, Reproducible Research and Publishing blogs with Github pages</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">news</div>
-                <div class="quarto-category">code</div>
-                <div class="quarto-category">analysis</div>
               </div>
                   </div>
   </div>
@@ -160,7 +158,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to Then, we created a blog backed in Quarto which is published in Github pages, this is where this entry is being written.</p>
+<p>Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows. Then, we created a blog backed in Quarto which is published in Github pages; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It’s again a good way to practice the commands related with version control in Github, and there’s a lot of applications to this. In this blog we will record and report everything we do throughout this course.</p>
 
 
 
@@ -238,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/emiliamoralest\.github\.io\/blog\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
