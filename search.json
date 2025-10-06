@@ -7,16 +7,16 @@
     "text": "About this blog"
   },
   {
-    "objectID": "posts/How to make a Quarto blog/index.html",
-    "href": "posts/How to make a Quarto blog/index.html",
+    "objectID": "posts/Day 1/index.html",
+    "href": "posts/Day 1/index.html",
     "title": "Day 1: Data Management, Reproducible Research and Publishing blogs with Github pages",
     "section": "",
-    "text": "Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows. Then, we created a blog backed in Quarto which is published in Github pages; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It’s again a good way to practice the commands related with version control in Github, and there’s a lot of applications to this. In this blog we will record and report everything we do throughout this course."
+    "text": "Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows.\nThen, we created a blog backed in Quarto which is published in Github pages; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It’s again a good way to practice the commands related with version control in Github, and there’s a lot of applications to this. In this blog we will record and report everything we do throughout this course.\nAnd the picture shows my dog, her name is Carmela and she’s very cute"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Course blog EM",
+    "title": "Applied Bioinformatics blog by Emilia",
     "section": "",
     "text": "Day 1: Data Management, Reproducible Research and Publishing blogs with Github pages\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nOct 6, 2025\n\n\nEmilia Morales\n\n\n\n\n\nNo matching items"
   }
