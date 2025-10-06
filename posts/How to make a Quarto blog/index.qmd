@@ -1,0 +1,10 @@
+---
+title: "How to make a post"
+author: "Emilia Morales"
+date: "2025-10-06"
+categories: [news, code, analysis]
+image: "carmela.jpg"
+jupyter: python3
+---
+
+

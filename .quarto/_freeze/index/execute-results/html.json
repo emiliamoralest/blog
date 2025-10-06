@@ -1,0 +1,12 @@
+{
+  "hash": "641f44986d279d7edb98e8e4346ca3c6",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Course blog EM\"\nlisting:\n  contents: posts\n  feed: true\n  sort: \"date desc\"\n  type: default\n  categories: true\n  sort-ui: false\n  filter-ui: false\npage-layout: full\ntitle-block-banner: true\njupyter: python3\n---\n\nprint('hola')\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

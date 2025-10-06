@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Course blog EM",
+    "section": "",
+    "text": "Hola\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nOct 6, 2025\n\n\nEmilia Morales\n\n\n\n\n\n\n\n\n\n\n\n\nHow to make a post\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nOct 6, 2025\n\n\nEmilia Morales\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/How to make a Quarto blog/index.html",
+    "href": "posts/How to make a Quarto blog/index.html",
+    "title": "How to make a post",
+    "section": "",
+    "text": "Hola"
+  },
+  {
+    "objectID": "posts/How to make a Quarto blog/Chao.html",
+    "href": "posts/How to make a Quarto blog/Chao.html",
+    "title": "Hola",
+    "section": "",
+    "text": "Chao"
+  }
+]

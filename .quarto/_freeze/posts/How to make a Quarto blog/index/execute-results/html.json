@@ -1,0 +1,12 @@
+{
+  "hash": "a90f88ee37aabaf934c340c664a5eaec",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"How to make a post\"\nauthor: \"Emilia Morales\"\ndate: \"2025-10-06\"\ncategories: [news, code, analysis]\nimage: \"carmela.jpg\"\njupyter: python3\n---\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
