@@ -9,7 +9,7 @@
 <meta name="author" content="Emilia Morales">
 <meta name="dcterms.date" content="2025-10-06">
 
-<title>How to make a post – Course_blog_EM</title>
+<title>Day 1: Data Management, Reproducible Research and Publishing blogs with Github pages – Course_blog_EM</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -119,7 +119,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">How to make a post</h1>
+      <h1 class="title">Day 1: Data Management, Reproducible Research and Publishing blogs with Github pages</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">news</div>
                 <div class="quarto-category">code</div>
@@ -160,6 +160,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<p>Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to Then, we created a blog backed in Quarto which is published in Github pages, this is where this entry is being written.</p>
 
 
 
@@ -237,7 +238,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/emiliamoralest\.github\.io\/blog\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

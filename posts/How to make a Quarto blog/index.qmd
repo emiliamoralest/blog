@@ -1,10 +1,10 @@
 ---
-title: "How to make a post"
+title: "Day 1: Data Management, Reproducible Research and Publishing blogs with Github pages"
 author: "Emilia Morales"
 date: "2025-10-06"
-categories: [news, code, analysis]
+categories: [news]
 image: "carmela.jpg"
-jupyter: python3
 ---
 
-
+Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows.
+Then, we created a blog backed in Quarto which is published in Github pages; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It's again a good way to practice the commands related with version control in Github, and there's a lot of applications to this. In this blog we will record and report everything we do throughout this course. 

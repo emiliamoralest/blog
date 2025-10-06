@@ -1,9 +1,0 @@
----
-title: "Hola"
-author: "Emilia Morales"
-date: "2025-10-06"
-categories: [news, code, analysis]
-image: ""
----
-
-Chao
