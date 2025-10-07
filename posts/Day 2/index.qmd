@@ -1,0 +1,14 @@
+---
+title: "Day 2: Environments (Pixi), containers, slurm and QC exercises"
+author: "Emilia Morales"
+date: "2025-10-07"
+categories: [news]
+image: "funny_cow.png"
+---
+
+On the second day of the course, we performed quality control exercises in RNA sequencing samples with different methods. First, we worked with Pixi, an environment manager. We logged into the course server and created a Pixi environment, where we added conda-forge and bioconda also. Then, we added the dependencies we wanted, like quarto and fastqc. For this, we also practiced the use of screens. In my QC directory, I created sym links to the place where the actual sequencing fastq files were stored. In order to run the fastqc tool obtained with Pixi, we used SLURM, the job scheduling system. We can run simple commands like:
+run pixi srun -A hpc2n2025-203 -t 15:00 -n 1 fastqc --noextract -o fastqc data/sample_1.fastq.gz data/sample_2.fastq.gz 
+Or we can write a script that runs it automatically (fastqc.sh) and then run it with sbatch. I can add run pixi within the script to obtain the tool. After running fastqc for all samples, we ran multiqc the same way, which summarises the output of the analysis of all the samples.
+
+Then, we worked with containers, in this case Docker and Apptainer. For this, we have to download the image from their website (https://hub.docker.com/ or https://seqera.io/containers/) with apptainer pull XX. And we can execute the tool with apptainer exec or run interactively with apptainer shell XX. So we also ran the fastqc tool from apptainer with sbatch.
+Afterwards, we built our own container. For this we have to create a definition file (.def), build the container with apptainer build lolcow.sif lolcow.def and we can run it with apptainer run lolcow.sif. If we run apptainer exec XX, the arguments we give afterwards override the side the script.
