@@ -1,0 +1,13 @@
+---
+title: "Day 3: Nextflow, nf-core and AI in bioinformatics"
+author: "Emilia Morales"
+date: "2025-10-08"
+categories: [news]
+image: "chat.jpeg"
+---
+
+On the third day of the course, we worked with the workflow manager Netflow and nf-core pipelines, which are built around Nextflow. First, we copied the training material from the course. Then we run a script that did some basic commands, like breaking our input text into chunks of 6 characters, and capitalizing the letters or turning them backwards. For this, we learnt how the structure of a nextflow file should be and how to manipulate each part. Then we ran the script using pixi also. We learnt what each nextflow output file shows and why. Finally, we learnt how to clean up the working directory Nextflow generates when running our commands. 
+Then, we tested an RNA sequencing analysis pipeline that is established in Nextflow. In the nextflow.config script we can set different parameters to be used in the further scripts, like for it to be executed with slurm, the default time limit for all processes and the project account. We then tried to run the first script that creates a transcriptome index file, using the tool salmon as a container. We couldn't finish running this, as our cluster ran out of resources allocated for us.
+We learnt the theory behind nf-core, but couldn't test it because of the resources. 
+
+Afterwards, we had a discussion about the use of AI in bioinformatics. It was interesting to learn that most Swedish universities allow the use of AI in official students' works as long as it is disclosed. 

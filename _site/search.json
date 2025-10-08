@@ -14,17 +14,17 @@
     "text": "Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows.\nThen, we created a blog backed in Quarto which is published in Github pages; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It’s again a good way to practice the commands related with version control in Github, and there’s a lot of applications to this. In this blog we will record and report everything we do throughout this course.\nAnd the picture shows my dog, her name is Carmela and she’s very cute"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Applied Bioinformatics blog by Emilia",
-    "section": "",
-    "text": "Day 2: Environments (Pixi), containers, slurm and QC exercises\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nOct 7, 2025\n\n\nEmilia Morales\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1: Data Management, Reproducible Research and Publishing blogs with Github pages\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nOct 6, 2025\n\n\nEmilia Morales\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "posts/Day 2/index.html",
     "href": "posts/Day 2/index.html",
     "title": "Day 2: Environments (Pixi), containers, slurm and QC exercises",
     "section": "",
     "text": "On the second day of the course, we performed quality control exercises in RNA sequencing samples with different methods. First, we worked with Pixi, an environment manager. We logged into the course server and created a Pixi environment, where we added conda-forge and bioconda also. Then, we added the dependencies we wanted, like quarto and fastqc. For this, we also practiced the use of screens. In my QC directory, I created sym links to the place where the actual sequencing fastq files were stored. In order to run the fastqc tool obtained with Pixi, we used SLURM, the job scheduling system. We can run simple commands like: run pixi srun -A hpc2n2025-203 -t 15:00 -n 1 fastqc –noextract -o fastqc data/sample_1.fastq.gz data/sample_2.fastq.gz Or we can write a script that runs it automatically (fastqc.sh) and then run it with sbatch. I can add run pixi within the script to obtain the tool. After running fastqc for all samples, we ran multiqc the same way, which summarises the output of the analysis of all the samples.\nThen, we worked with containers, in this case Docker and Apptainer. For this, we have to download the image from their website (https://hub.docker.com/ or https://seqera.io/containers/) with apptainer pull XX. And we can execute the tool with apptainer exec or run interactively with apptainer shell XX. So we also ran the fastqc tool from apptainer with sbatch. Afterwards, we built our own container. For this we have to create a definition file (.def), build the container with apptainer build lolcow.sif lolcow.def and we can run it with apptainer run lolcow.sif. If we run apptainer exec XX, the arguments we give afterwards override the side the script."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Applied Bioinformatics blog by Emilia",
+    "section": "",
+    "text": "Day 2: Environments (Pixi), containers, slurm and QC exercises\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nOct 7, 2025\n\n\nEmilia Morales\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1: Data Management, Reproducible Research and Publishing blogs with Github pages\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nOct 6, 2025\n\n\nEmilia Morales\n\n\n\n\n\nNo matching items"
   }
 ]
