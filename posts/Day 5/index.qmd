@@ -1,0 +1,9 @@
+---
+title: "Day 5: ggplot2 and wrapup"
+author: "Emilia Morales"
+date: "2025-10-10"
+categories: [news]
+image: "chat.jpeg"
+---
+
+On the final day of the course, we had a session about the R package ggplot2, which is widely used for making graphs as there are a lot of options to personalize. After learning some theory behind it, the structure and some examples, we did some exercises ourselves by following a tutorial from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots. 

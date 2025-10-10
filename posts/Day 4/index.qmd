@@ -1,0 +1,9 @@
+---
+title: "Day 4: RNA-Seq data analysis with Nextflow and nf-core pipelines"
+author: "Emilia Morales"
+date: "2025-10-09"
+categories: [news]
+image: "chat.jpeg"
+---
+
+Today we could run correctly the RNA-Seq pipeline with nextflow and nf-core. First, we tested the workflow manager nextflow by chaining the steps for qc and multiqc. Then we tested the 'rnaseq' pipeline by nf-core, which was built with nextflow. We used some of the RNA samples we had previously received, and ran the pipeline.

@@ -1,5 +1,6 @@
 ---
-title: "Applied Bioinformatics blog by Emilia"
+title: "Applied Bioinformatics course - blog by Emilia"
+subtitle: "Course 1 of the MedBioinfo program"
 listing:
   contents: posts
   feed: true
