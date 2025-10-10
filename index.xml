@@ -10,7 +10,47 @@
 <atom:link href="https://emiliamoralest.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A blog built with Quarto</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Tue, 07 Oct 2025 22:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 09 Oct 2025 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>Day 5: ggplot2 and wrapup</title>
+  <dc:creator>Emilia Morales</dc:creator>
+  <link>https://emiliamoralest.github.io/blog/posts/Day 5/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>On the final day of the course, we had a session about the R package ggplot2, which is widely used for making graphs as there are a lot of options to personalize. After learning some theory behind it, the structure and some examples, we did some exercises ourselves by following a tutorial from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots.</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <guid>https://emiliamoralest.github.io/blog/posts/Day 5/</guid>
+  <pubDate>Thu, 09 Oct 2025 22:00:00 GMT</pubDate>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 5/chat.jpeg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Day 4: RNA-Seq data analysis with Nextflow and nf-core pipelines</title>
+  <dc:creator>Emilia Morales</dc:creator>
+  <link>https://emiliamoralest.github.io/blog/posts/Day 4/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Today we could run correctly the RNA-Seq pipeline with nextflow and nf-core. First, we tested the workflow manager nextflow by chaining the steps for qc and multiqc. Then we tested the ‘rnaseq’ pipeline by nf-core, which was built with nextflow. We used some of the RNA samples we had previously received, and ran the pipeline.</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <guid>https://emiliamoralest.github.io/blog/posts/Day 4/</guid>
+  <pubDate>Wed, 08 Oct 2025 22:00:00 GMT</pubDate>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 4/chat.jpeg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Day 3: Nextflow, nf-core and AI in bioinformatics</title>
   <dc:creator>Emilia Morales</dc:creator>
