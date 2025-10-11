@@ -73,7 +73,7 @@
   <media:content url="https://emiliamoralest.github.io/blog/posts/Day 3/chat.jpeg" medium="image" type="image/jpeg"/>
 </item>
 <item>
-  <title>Day 2: Environments (Pixi), containers, slurm and QC exercises</title>
+  <title>Day 2: Environments with Pixi, SLURM, containers and QC exercises</title>
   <dc:creator>Emilia Morales</dc:creator>
   <link>https://emiliamoralest.github.io/blog/posts/Day 2/</link>
   <description><![CDATA[ 
@@ -82,16 +82,197 @@
 
 
 
-<p>On the second day of the course, we performed quality control exercises in RNA sequencing samples with different methods. First, we worked with Pixi, an environment manager. We logged into the course server and created a Pixi environment, where we added conda-forge and bioconda also. Then, we added the dependencies we wanted, like quarto and fastqc. For this, we also practiced the use of screens. In my QC directory, I created sym links to the place where the actual sequencing fastq files were stored. In order to run the fastqc tool obtained with Pixi, we used SLURM, the job scheduling system. We can run simple commands like: run pixi srun -A hpc2n2025-203 -t 15:00 -n 1 fastqc –noextract -o fastqc data/sample_1.fastq.gz data/sample_2.fastq.gz Or we can write a script that runs it automatically (fastqc.sh) and then run it with sbatch. I can add run pixi within the script to obtain the tool. After running fastqc for all samples, we ran multiqc the same way, which summarises the output of the analysis of all the samples.</p>
-<p>Then, we worked with containers, in this case Docker and Apptainer. For this, we have to download the image from their website (https://hub.docker.com/ or https://seqera.io/containers/) with apptainer pull XX. And we can execute the tool with apptainer exec or run interactively with apptainer shell XX. So we also ran the fastqc tool from apptainer with sbatch. Afterwards, we built our own container. For this we have to create a definition file (.def), build the container with apptainer build lolcow.sif lolcow.def and we can run it with apptainer run lolcow.sif. If we run apptainer exec XX, the arguments we give afterwards override the side the script.</p>
+<section id="information-to-remember" class="level3">
+<h3 class="anchored" data-anchor-id="information-to-remember">Information to remember</h3>
+<p><strong>Bioinformatics environments</strong></p>
+<ul>
+<li>We can create a virtual environment to define and manage different tools and their dependencies we need for our analyses, in order to keep the workflow reproducible.</li>
+<li>With environments, we can run the same analysis in different computers with different operating systems.</li>
+<li>It’s easier to create this than installing and loading every package in the specific version every time we want to reproduce some old result.</li>
+<li>Examples of environment managers are conda (bioconda for more biology related stuff) and Pixi, which we will use today.</li>
+<li>Pixi runs on all major operating systems, and allows to include multiple platforms within a single environment.</li>
+<li>It’s good to create an environment for every project.</li>
+</ul>
+<p><strong>Containers</strong></p>
+<ul>
+<li>Another system that can help greatly with assuring reproducibility in our bioinformatics analyses is the use of containers. A container is a software that’s built with ‘images’ of all its content.</li>
+<li>They can be run on any computer and system, they contain everything needed to run an application.</li>
+<li>They include, apart from the packages and dependencies, the operating system.</li>
+<li>They require a container management tool to run a fully isolated system on top of the computer’s OS.</li>
+<li>The different with environment managers is that environments manage tools within our system, while containers package the entire system the tools run in.</li>
+<li>Examples: Docker, Apptainer, Podman.</li>
+<li>There are several public container images with established purposes. Common sites to download them are Dockerhub <a href="https://hub.docker.com/" class="uri">https://hub.docker.com/</a> (Docker) and Seqera <a href="https://seqera.io/containers/" class="uri">https://seqera.io/containers/</a> (Docker or Singularity/Apptainer). Seqera also allows you to ‘make’ container images as you wish.</li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> This material was taken from the course’s webpage.</p>
+</blockquote>
+<hr>
+</section>
+<section id="what-we-did-today" class="level3">
+<h3 class="anchored" data-anchor-id="what-we-did-today">What we did today</h3>
+<p><strong>Getting started with Pixi</strong><br>
+On the second day of the course, we performed quality control exercises in RNA sequencing samples with different methods. First, we worked with Pixi, an environment manager. We logged into the course server and created a Pixi environment, where we added the conda-forge and bioconda channels:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pixi</span> init <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> conda-forge <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> bioconda</span></code></pre></div></div>
+<p>After running this, a new file named <em>pixi.toml</em> is created, where we can see all the packages loaded and their versions. And the <em>pixi.lock</em> file contains further information about where the packages where installed from, license information, etc. These shouldn’t be deleted or the environment will break.<br>
+Then, we added the dependencies we wanted, like quarto, with the command <code>pixi add quarto</code>. In order to run the tool we installed, we can run <code>pixi run quarto</code>, or “enter” the Pixi environment with <code>pixi shell</code> and then we can avoid the <code>pixi run</code> command every time.</p>
+<p><strong>QC exercise with Pixi</strong><br>
+For the quality control exercise we practiced the use of screens, slurm and the environment in Pixi previously created. We did the quality control assessment with a tool called FastQC, which requires as input data in fastq, SAM or BAM formats and generates a .hyml report with a summary of the analysis for each sample in different aspects. We started by opening a screen. Opening a screen helps us run a process that may be longer without overloading our main terminal window, especially if we are working locally (then we can close the computer while the process is still running). To open a new screen:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">screen</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-S</span> name</span></code></pre></div></div>
+<p>Then, in my QC directory, I created sym links to the place where the actual sequencing fastq files were stored:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ln</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-s</span> path/to/common_data/RNAseq/<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span>fastq.gz .</span></code></pre></div></div>
+<p>We added then the fastqc tool to our pixi environment. An in order to run the fastqc tool obtained with Pixi, we used SLURM, the job scheduling system. This way we can use the resources of a specific project instead of the login node, which doesn’t have a big computational power and many people use it at the same time. To run the tool we can use the following command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pixi</span> run srun <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-A</span> hpc2n2025-203 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-t</span> 15:00 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-n</span> 1 fastqc <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--noextract</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-o</span> fastqc data/sample_1.fastq.gz data/sample_2.fastq.gz </span></code></pre></div></div>
+<p>where we first specify that the fastqc tool is within our Pixi environment, -A <em>project_id</em>, -t <em>maximum running time</em>, -n <em>number_cores</em>, ‘fastqc’ is our tool and the parameters that come afterwards are specific for it, like -o <em>output directory</em> and the samples (both directions) to be analyzed.<br>
+Alternatively we can write a script that runs the tool automatically in the background instead of occupying the screen or terminal and then run it with sbatch. These scripts have the following structure:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#! /bin/bash -l</span></span>
+<span id="cb5-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#SBATCH -A hpc2n2025-203</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#SBATCH -t 30:00</span></span>
+<span id="cb5-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#SBATCH -n 1</span></span>
+<span id="cb5-5"></span>
+<span id="cb5-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pixi</span> run fastqc <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-o</span> ../fastqc <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--noextract</span> ../data/<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span>fastq.gz</span></code></pre></div></div>
+<p>And I can run it with <code>sbatch 'script'</code>. After running fastqc for all samples, we ran multiqc <code>multiqc 'fastqc_directory' 'output_directory'</code>, which summarises the output of the analysis of all the samples creating one single htlm report.</p>
+<p><strong>QC exercise with containers</strong><br>
+We also tested the QC analysis using a container downloaded from Seqera with the fastqc tool instead of with Pixi. We ran this script with sbatch:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#! /bin/bash -l</span></span>
+<span id="cb6-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#SBATCH -A hpc2n2025-203</span></span>
+<span id="cb6-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#SBATCH -t 30:00</span></span>
+<span id="cb6-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#SBATCH -n 1</span></span>
+<span id="cb6-5"></span>
+<span id="cb6-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">apptainer</span> exec <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-B</span> ../data:/data ../../containers/fastqc_0.12.1--104d26ddd9519960.sif<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span> fastqc <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-o</span> ../fastqc_container <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--noextract</span> ../data/<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">*</span>fastq.gz</span></code></pre></div></div>
+<p>where the container had been previously downloaded into my <em>containers</em> folder. Then apptainer is called to execute the container which contains the fastqc tool, and we provide the parameters for it as before.</p>
+<p><strong>Building a container</strong><br>
+If the software we want is not in a published container, we can build one as we want. Here we built a container with a cow that told us the date or a fortune phrase, as shown in the post’s picture. Our script <code>lolcow.def</code> that says a fortune phrase looks like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Bootstrap:</span> docker</span>
+<span id="cb7-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">From:</span> ubuntu:20.04</span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%post</span></span>
+<span id="cb7-5">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">apt-get</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-y</span> update</span>
+<span id="cb7-6">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">apt-get</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-y</span> install cowsay lolcat fortune</span>
+<span id="cb7-7"></span>
+<span id="cb7-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%environment</span></span>
+<span id="cb7-9">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">LC_ALL</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>C</span>
+<span id="cb7-10">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">PATH</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>/usr/games:<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$PATH</span></span>
+<span id="cb7-11"></span>
+<span id="cb7-12"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">%runscript</span></span>
+<span id="cb7-13">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fortune</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">cowsay</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">lolcat</span>    </span></code></pre></div></div>
+<p>Then, to build the container we run <code>apptainer build lolcow.sif lolcow.def</code> and run it with <code>apptainer run lolcow.sif</code>. If we run instead <code>apptainer exec lolcow.sif bash -c "date|cowsay</code>, we get a date because with ‘exec’, the command we specify outside when running the container overrides the one inside. The cow speaks the truth sometimes. <img src="https://emiliamoralest.github.io/blog/posts/Day 2/images/cow.png" class="img-fluid"></p>
 
 
+</section>
 
  ]]></description>
-  <category>news</category>
+  <category>post</category>
   <guid>https://emiliamoralest.github.io/blog/posts/Day 2/</guid>
   <pubDate>Mon, 06 Oct 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 2/funny_cow.png" medium="image" type="image/png" height="65" width="144"/>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 2/images/cow.png" medium="image" type="image/png" height="57" width="144"/>
 </item>
 <item>
   <title>Day 1: Data Management, Reproducible Research and How to make a Quarto blog</title>
@@ -103,13 +284,6 @@
 
 
 
-<section id="what-we-did-today" class="level3">
-<h3 class="anchored" data-anchor-id="what-we-did-today">What we did today</h3>
-<p>Today was the first day of the Applied Bioinformatics course. We learned in general about good practices in reproducible research, and we had an exercise with GitHub. We each created a branch with our name, and added our name to the README file. Then we merged this branch with someone else’s, resolving the emerging conflicts on. Then we merged this branch with someone else and so on, after multiple merges we created a student list with all of us in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows.</p>
-<p>Then, we created a blog in VSCode which is published in Github pages with Quarto; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It’s again a good way to practice the commands related with version control in Github, and there’s a lot of applications to this. In this blog we will record and report everything we do throughout this course.</p>
-<p>Today I’m testing different functionalities and things I can edit in the webpage when creating blog posts. The picture shows my dog, her name is Carmela and she’s very <strong>cute</strong></p>
-<hr>
-</section>
 <section id="information-to-remember" class="level3">
 <h3 class="anchored" data-anchor-id="information-to-remember">Information to remember</h3>
 <ul>
@@ -130,10 +304,23 @@
 <ul>
 <li>I like to start with the date (YY.MM.DD_XX.X).</li>
 </ul></li>
+<li>Use version control (git-github) to track all the changes made to the files.</li>
+<li>Use environment managers and/or containers to manage packages and maintain the same versions across systems and time.</li>
+<li>Simplify workflows by standardizing the steps with a workflow manager or establish a new proper pipeline.</li>
 </ul></li>
 </ul>
 <blockquote class="blockquote">
 <p><strong>Note:</strong> This material was taken from the course’s webpage.</p>
+</blockquote>
+<hr>
+</section>
+<section id="what-we-did-today" class="level3">
+<h3 class="anchored" data-anchor-id="what-we-did-today">What we did today</h3>
+<p>Today was the first day of the Applied Bioinformatics course. We learned in general about good practices in reproducible research, and we had an exercise with GitHub. We each created a branch with our name, and added our name to the README file. Then we merged this branch with someone else’s, resolving the emerging conflicts on. Then we merged this branch with someone else and so on, after multiple merges we created a student list with all of us in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows.</p>
+<p>Then, we created a blog in VSCode which is published in Github pages with Quarto; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It’s again a good way to practice the commands related with version control in Github, and there’s a lot of applications to this. In this blog we will record and report everything we do throughout this course.</p>
+<p>Today I’m testing different functionalities and things I can edit in the webpage when creating blog posts.</p>
+<blockquote class="blockquote">
+<p>The opening picture shows my dog, her name is Carmela and she’s <strong>very cute</strong></p>
 </blockquote>
 
 
