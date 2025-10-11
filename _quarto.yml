@@ -3,21 +3,23 @@ project:
 
 website:
   description: "A blog built with Quarto"
-  title: "Course_blog_EM"
+  title: "Personal Blog"
   navbar:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/emiliamoralest
+      - icon: linkedin
+        href: https://www.linkedin.com/in/emilia-morales-962244141
 format:
   html:
     theme:
       - cosmo
       - brand
     css: styles.css
+    highlight-style: atom-one
 execute:
   freeze: auto
-
+  echo: true
+  eval: false
 

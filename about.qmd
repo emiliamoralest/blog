@@ -1,6 +1,6 @@
 ---
 title: "About"
-image: profile.jpg
+image: me.png
 about:
   template: jolla
   links:
@@ -16,4 +16,4 @@ about:
 
 ---
 
-About this blog
+My name is Emilia Morales, I was born in Quito-Ecuador and now I live in Stockholm-Sweden. I do bioinformatics in translational breast cancer research, where we study how different treatments affect tumors with the aim of developing personalized treatment approaches.

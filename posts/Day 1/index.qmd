@@ -1,13 +1,33 @@
 ---
-title: "Day 1: Data Management, Reproducible Research and Publishing blogs with Github pages"
+title: "Day 1: Data Management, Reproducible Research and How to make a Quarto blog"
+description: "This blog in created with Quarto, and published with GitHub pages"
 author: "Emilia Morales"
 date: "2025-10-06"
-categories: [news]
+categories: [post]
 image: "carmela.jpg"
 ---
 
-Today was the first day of the Applied Bioinformatics course. We learnt in general about good practices in reproducible research, and we had an excercise with Github. We practiced creating branches and merging these with other classmates, resolving the emerging conflicts on. Like this, after multiple merges, we created a student list in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows.
+### What we did today
+Today was the first day of the Applied Bioinformatics course. We learned in general about good practices in reproducible research, and we had an exercise with GitHub. We each created a branch with our name, and added our name to the README file. Then we merged this branch with someone else's, resolving the emerging conflicts on. Then we merged this branch with someone else and so on, after multiple merges we created a student list with all of us in alphabetical order. It was challenging to go through with all the commands of pushing, pulling, committing, adding etc., but the more I practice, the easier it gets and the better it flows.
 
-Then, we created a blog backed in Quarto which is published in Github pages; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It's again a good way to practice the commands related with version control in Github, and there's a lot of applications to this. In this blog we will record and report everything we do throughout this course. 
+Then, we created a blog in VSCode which is published in Github pages with Quarto; this is where this entry is being written. This is a very useful tool, as it basically allows us to create a webpage in a simple way, which is backed up by Github. It's again a good way to practice the commands related with version control in Github, and there's a lot of applications to this. In this blog we will record and report everything we do throughout this course. 
 
-And the picture shows my dog, her name is Carmela and she's very cute
+Today I'm testing different functionalities and things I can edit in the webpage when creating blog posts. The picture shows my dog, her name is Carmela and she's very **cute**
+
+---
+
+### Information to remember
+- We work with data, so it's important to remember the FAIR principles about good data management practices:
+
+![FAIR principles](images/fair.png){.class width=50%}
+
+- Data management things to take into account:
+  - The raw data should be in a folder alone where it won't get altered, and separated from the code and results.
+  - There should be information about what I did in every project folder, for me to remember later and also for others to understand if the code is to be passed on, preferably with a README file. It's also advisable to write code in scripts combined with text for documentation and explanations (literate programming).
+  - Name files properly without special characters and spaces. 
+    - I like to start with the date (YY.MM.DD_XX.X). 
+
+> **Note:** This material was taken from the course's webpage.
+
+
+
