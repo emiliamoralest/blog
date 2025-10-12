@@ -12,7 +12,7 @@
 <generator>quarto-1.8.24</generator>
 <lastBuildDate>Thu, 09 Oct 2025 22:00:00 GMT</lastBuildDate>
 <item>
-  <title>Day 5: ggplot2 and wrapup</title>
+  <title>Day 5: ggplot2 and wrap-up</title>
   <dc:creator>Emilia Morales</dc:creator>
   <link>https://emiliamoralest.github.io/blog/posts/Day 5/</link>
   <description><![CDATA[ 
@@ -21,15 +21,34 @@
 
 
 
-<p>On the final day of the course, we had a session about the R package ggplot2, which is widely used for making graphs as there are a lot of options to personalize. After learning some theory behind it, the structure and some examples, we did some exercises ourselves by following a tutorial from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots.</p>
+<p>On the final day of the course, we had a session about the R package ggplot2, which is widely used for making graphs in R as there are a lot of options to personalize. Some useful links provided in the presentation:</p>
+<ul>
+<li>ggplot2 extensions <a href="https://exts.ggplot2.tidyverse.org/" class="uri">https://exts.ggplot2.tidyverse.org/</a></li>
+<li>A curated list of awesome ggplot2 tutorials, packages etc. <a href="https://github.com/erikgahner/awesome-ggplot2" class="uri">https://github.com/erikgahner/awesome-ggplot2</a></li>
+<li>Official cheatsheet <a href="https://ggplot2.tidyverse.org/reference/" class="uri">https://ggplot2.tidyverse.org/reference/</a></li>
+<li>RStudio cheatsheets, including Quarto and several useful packages <a href="https://posit.co/resources/cheatsheets/" class="uri">https://posit.co/resources/cheatsheets/</a></li>
+</ul>
+<p>After learning some theory behind ggplot2, the structure and some examples, we did some exercises ourselves by following a <a href="https://nbisweden.github.io/raukr-2023/labs/ggplot/">tutorial</a> from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots. Here are the resulting plots made by me:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://emiliamoralest.github.io/blog/posts/Day 5/images/scatterplot.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Scatterplot</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://emiliamoralest.github.io/blog/posts/Day 5/images/heatmap.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>Heatmap</figcaption>
+</figure>
+</div>
 
 
 
  ]]></description>
-  <category>news</category>
+  <category>post</category>
   <guid>https://emiliamoralest.github.io/blog/posts/Day 5/</guid>
   <pubDate>Thu, 09 Oct 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 5/chat.jpeg" medium="image" type="image/jpeg"/>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 5/images/gg.png" medium="image" type="image/png" height="80" width="144"/>
 </item>
 <item>
   <title>Day 4: RNA-Seq data analysis with Nextflow and nf-core pipelines</title>
@@ -41,15 +60,737 @@
 
 
 
-<p>Today we could run correctly the RNA-Seq pipeline with nextflow and nf-core. First, we tested the workflow manager nextflow by chaining the steps for qc and multiqc. Then we tested the ‘rnaseq’ pipeline by nf-core, which was built with nextflow. We used some of the RNA samples we had previously received, and ran the pipeline.</p>
+<section id="what-we-did-today" class="level3">
+<h3 class="anchored" data-anchor-id="what-we-did-today">What we did today</h3>
+<p>Today we could run correctly the RNA-Seq pipeline with Nextflow and nf-core, as a continuation from yesterday.</p>
+<p><strong>Nextflow RNA-Seq pipeline</strong><br>
+We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don’t need to add them to Pixi, only <em>nextflow</em> must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script <em>script.nf</em> looked at the end:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#!/usr/bin/env nextflow</span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">/*</span></span>
+<span id="cb1-4"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> pipeline input parameters</span>
+<span id="cb1-5"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*/</span></span>
+<span id="cb1-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">params.reads</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$projectDir</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/data/ggal/gut_{1,2}.fq"</span></span>
+<span id="cb1-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">params.transcriptome_file</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$projectDir</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/data/ggal/transcriptome.fa"</span></span>
+<span id="cb1-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">params.multiqc</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$projectDir</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/multiqc"</span></span>
+<span id="cb1-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">params.outdir</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"results"</span></span>
+<span id="cb1-10"></span>
+<span id="cb1-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">log.info</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb1-12"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    R N A S E Q - N F   P I P E L I N E</span></span>
+<span id="cb1-13"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    ===================================</span></span>
+<span id="cb1-14"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    transcriptome: </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${params</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">.transcriptome_file</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-15"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    reads        : </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${params</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">.reads</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-16"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    outdir       : </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${params</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">.outdir</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-17"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb1-18">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">.stripIndent()</span></span>
+<span id="cb1-19"></span>
+<span id="cb1-20"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">/*</span></span>
+<span id="cb1-21"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> define the <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">`</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">INDEX</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">`</span> process that creates a binary index</span>
+<span id="cb1-22"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> given the transcriptome file</span>
+<span id="cb1-23"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*/</span></span>
+<span id="cb1-24"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">process</span> INDEX {</span>
+<span id="cb1-25">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">input:</span></span>
+<span id="cb1-26">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path</span> transcriptome</span>
+<span id="cb1-27"></span>
+<span id="cb1-28">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">output:</span></span>
+<span id="cb1-29">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'salmon_index'</span></span>
+<span id="cb1-30"></span>
+<span id="cb1-31">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">container</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'https://depot.galaxyproject.org/singularity/salmon:1.10.1--h7e5ed60_0'</span></span>
+<span id="cb1-32">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">publishDir</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$params</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.outdir/salmon"</span></span>
+<span id="cb1-33"></span>
+<span id="cb1-34">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">script:</span></span>
+<span id="cb1-35">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb1-36"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    salmon index --threads </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$task</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.cpus -t </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$transcriptome</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> -i salmon_index</span></span>
+<span id="cb1-37"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb1-38"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-39"></span>
+<span id="cb1-40"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">process</span> QUANTIFICATION {</span>
+<span id="cb1-41">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">input:</span></span>
+<span id="cb1-42">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path</span> salmon_index</span>
+<span id="cb1-43">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tuple</span> val<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sample_id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">,</span> path<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">reads</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-44"></span>
+<span id="cb1-45">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">output:</span></span>
+<span id="cb1-46">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$sample_id</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-47"></span>
+<span id="cb1-48">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">container</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'https://depot.galaxyproject.org/singularity/salmon:1.10.1--h7e5ed60_0'</span></span>
+<span id="cb1-49">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">publishDir</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$params</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.outdir/salmon_quantification"</span></span>
+<span id="cb1-50"></span>
+<span id="cb1-51">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">script:</span></span>
+<span id="cb1-52">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb1-53"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    salmon quant --threads </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$task</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.cpus --libType=U -i </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$salmon_index</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> -1 </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${reads</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> -2 </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${reads</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> -o </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$sample_id</span></span>
+<span id="cb1-54"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb1-55"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-56"></span>
+<span id="cb1-57"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">process</span> FASTQC {</span>
+<span id="cb1-58">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">input:</span></span>
+<span id="cb1-59">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tuple</span> val<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sample_id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">,</span> path<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">reads</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-60"></span>
+<span id="cb1-61">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">output:</span></span>
+<span id="cb1-62">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fastqc_</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${sample_id}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-63"></span>
+<span id="cb1-64">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">container</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0'</span></span>
+<span id="cb1-65">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">publishDir</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$params</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.outdir/fastqc"</span></span>
+<span id="cb1-66"></span>
+<span id="cb1-67">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">script:</span></span>
+<span id="cb1-68">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb1-69"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    mkdir fastqc_</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${sample_id}</span></span>
+<span id="cb1-70"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    fastqc --noextract -o fastqc_</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${sample_id}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${reads</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${reads</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-71"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb1-72"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-73"></span>
+<span id="cb1-74"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">process</span> MULTIQC {</span>
+<span id="cb1-75">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">input:</span></span>
+<span id="cb1-76">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'*'</span></span>
+<span id="cb1-77"></span>
+<span id="cb1-78">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">output:</span></span>
+<span id="cb1-79">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">path</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"multiqc_report.html"</span></span>
+<span id="cb1-80"></span>
+<span id="cb1-81">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">container</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'community.wave.seqera.io/library/multiqc:1.31--1efbafd542a23882'</span></span>
+<span id="cb1-82">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">publishDir</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$params</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.outdir/multiqc"</span></span>
+<span id="cb1-83"></span>
+<span id="cb1-84">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">script:</span></span>
+<span id="cb1-85">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb1-86"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    multiqc .</span></span>
+<span id="cb1-87"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb1-88"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-89"></span>
+<span id="cb1-90"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">workflow</span> {</span>
+<span id="cb1-91">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Channel</span></span>
+<span id="cb1-92">        <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.fromFilePairs</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">params.reads,</span> checkIfExists: true<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-93">        <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">.set</span> { read_pairs_ch }</span>
+<span id="cb1-94"></span>
+<span id="cb1-95">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">index_ch</span> = INDEX<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">params.transcriptome_file</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-96">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">quant_ch</span> = QUANTIFICATION<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">index_ch,</span> read_pairs_ch<span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-97">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fastqc_ch</span> = FASTQC<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">read_pairs_ch</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-98">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">MULTIQC</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">quant_ch.mix</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">fastqc_ch</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">.collect()</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">)</span></span>
+<span id="cb1-99"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div></div>
+<p>And our <em>nextflow.config</em> file looked like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">process{</span></span>
+<span id="cb2-2">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">executor</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"slurm"</span></span>
+<span id="cb2-3">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">time</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'2.h'</span>  // Set default time limit for all processes</span>
+<span id="cb2-4">    </span>
+<span id="cb2-5">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">//</span> Other settings</span>
+<span id="cb2-6">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">cpus</span> = 4</span>
+<span id="cb2-7"></span>
+<span id="cb2-8">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">withName:</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'INDEX'</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb2-9">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">time</span> = 15.m</span>
+<span id="cb2-10">        <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">cpus</span> = 2</span>
+<span id="cb2-11">    <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-12"></span>
+<span id="cb2-13">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">withName:</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'QUANTIFICATION'</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb2-14">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">time</span> = 10.m</span>
+<span id="cb2-15">        <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">cpus</span> = 2</span>
+<span id="cb2-16">    <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-17"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-18"></span>
+<span id="cb2-19"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">resume</span> = true</span>
+<span id="cb2-20"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">singularity.enabled</span> = true</span>
+<span id="cb2-21"></span>
+<span id="cb2-22"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">executor</span> {</span>
+<span id="cb2-23">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">account</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'hpc2n2025-203'</span></span>
+<span id="cb2-24"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div></div>
+<p><strong>nf-core RNA-Seq pipeline</strong><br>
+Then we tested the <a href="https://nf-co.re/rnaseq/3.19.0">rnaseq</a> pipeline by nf-core, which was built with Nextflow. We used some of the RNA samples we had previously received, and ran the pipeline. We started by addind nextflow and nf-core to our Pixi environment. Then we went to the nf-core launcher in the website and added our data: absolute path of the dir of the <em>samplesheet.csv</em> file we created according to the instructions with input data informayion, and absolute path of the output dir. Then, we downloaded the needed reference genome files (fasta and gtf) and provided those paths to the launcher. Our resulting <em>nf-params.json</em> file looked like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">{</span></span>
+<span id="cb3-2">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"input"</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/samplesheet.csv"</span>,</span>
+<span id="cb3-3">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"outdir"</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".\/results"</span>,</span>
+<span id="cb3-4">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fasta"</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"</span>,</span>
+<span id="cb3-5">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gtf"</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.108.gtf"</span></span>
+<span id="cb3-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">}</span></span></code></pre></div></div>
+<p>We also prepared the <em>hpc2n.config</em> file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">//</span> Config profile for HPC2N</span>
+<span id="cb4-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">params</span> {</span>
+<span id="cb4-3">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">config_profile_description</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Cluster profile for HPC2N'</span></span>
+<span id="cb4-4">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">config_profile_contact</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Pedro Ojeda @pojeda'</span></span>
+<span id="cb4-5">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">config_profile_url</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'https://www.hpc2n.umu.se/'</span></span>
+<span id="cb4-6">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">project</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'hpc2n2025-203'</span></span>
+<span id="cb4-7">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">clusterOptions</span> = null</span>
+<span id="cb4-8">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">max_memory</span> = 128.GB</span>
+<span id="cb4-9">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">max_cpus</span> = 28</span>
+<span id="cb4-10">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">max_time</span> = 168.h</span>
+<span id="cb4-11">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">email</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'emilia.morales@ki.se'</span></span>
+<span id="cb4-12"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb4-13"></span>
+<span id="cb4-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">singularity</span> {</span>
+<span id="cb4-15">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">enabled</span> = true</span>
+<span id="cb4-16"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb4-17"></span>
+<span id="cb4-18"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">process</span> {</span>
+<span id="cb4-19">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">executor</span> = <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'slurm'</span></span>
+<span id="cb4-20">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">clusterOptions</span> = { <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-A </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$params</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.project </span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${params</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">.clusterOptions ?: ''</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> }</span>
+<span id="cb4-21"><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div></div>
+<p>The final command to run the whole pipeline is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pixi</span> run nextflow run nf-core/rnaseq <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> 3.19.0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-resume</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-params-file</span> nf-params.json <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-c</span> hpc2n.config</span></code></pre></div></div>
+<p>After we are done running what we want, we can see the previous runs with <code>pixi run nextflow log</code>, and then clean up our working directory with <code>pixi run nextflow clean -f -before &lt;run_name&gt;</code> to keep the log of a run, or simply <code>pixi run nextflow clean -f</code> to clean everything.</p>
 
 
+</section>
 
  ]]></description>
-  <category>news</category>
+  <category>post</category>
   <guid>https://emiliamoralest.github.io/blog/posts/Day 4/</guid>
   <pubDate>Wed, 08 Oct 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 4/chat.jpeg" medium="image" type="image/jpeg"/>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 4/images/nf.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
   <title>Day 3: Nextflow, nf-core and AI in bioinformatics</title>
@@ -83,13 +824,15 @@
 <li>Processes run independently from each other. So processes that are set to run simultaneously will run in no particular order.</li>
 <li>Usually, the content of a channel is consumed only once.</li>
 <li>In a Nextflow script, first we need to define our parameters (data) and channels (actions). Then the codes for each process. And finally the workflow scope, where we indicate what we want to be done with our parameters and channels. (The order doesn’t have to be like this strictly.)</li>
+<li>We also need a <code>nextflow.config</code> file where we can choose <em>slurm</em> as the executor, how many cpus to use and the maximum run time. We can also set individual choices for each process.</li>
 </ul>
 <p><strong>nf-core</strong></p>
 <ul>
 <li>nf-core is a community built around Nextflow. There we can find several bioinformatics pipelines developed by volunteers with Nextflow.</li>
 <li>nf-core also provides processes as <em>modules</em>, if the whole pipeline is not required.</li>
 <li>We can access their pipelines <a href="https://nf-co.re/pipelines/%3E">here</a>. And the modules <a href="https://nf-co.re/modules/">here</a>.</li>
-<li>In order to run an nf-core pipeline, we have to go its website and click on <em>Launch version X</em>, where we will be taken to another page to enter parameters about our samples and process, and we will get the configuration file for our run..</li>
+<li>In order to run an nf-core pipeline, we have to go its website and click on <em>Launch version X</em>, where we will be taken to another page to enter parameters about our samples and process, and we will get a JSON file necessary for our run.</li>
+<li>We will also need an hpc2n.config file with our project ID information.</li>
 </ul>
 <blockquote class="blockquote">
 <p><strong>Note:</strong> This material was taken from the course’s webpage.</p>
@@ -105,10 +848,10 @@
 </section>
 
  ]]></description>
-  <category>news</category>
+  <category>post</category>
   <guid>https://emiliamoralest.github.io/blog/posts/Day 3/</guid>
   <pubDate>Tue, 07 Oct 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 3/chat.jpeg" medium="image" type="image/jpeg"/>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 3/images/chat.jpeg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Day 2: Environments with Pixi, SLURM, containers and QC exercises</title>
@@ -368,7 +1111,7 @@ font-style: inherit;">lolcat</span>    </span></code></pre></div></div>
   <category>post</category>
   <guid>https://emiliamoralest.github.io/blog/posts/Day 1/</guid>
   <pubDate>Sun, 05 Oct 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 1/carmela.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://emiliamoralest.github.io/blog/posts/Day 1/images/carmela.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

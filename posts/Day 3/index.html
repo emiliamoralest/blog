@@ -8,6 +8,7 @@
 
 <meta name="author" content="Emilia Morales">
 <meta name="dcterms.date" content="2025-10-08">
+<meta name="description" content="Introduction to workflow managers and AI talks">
 
 <title>Day 3: Nextflow, nf-core and AI in bioinformatics – Personal Blog</title>
 <style>
@@ -120,8 +121,13 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Day 3: Nextflow, nf-core and AI in bioinformatics</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">news</div>
+                  <div>
+        <div class="description">
+          Introduction to workflow managers and AI talks
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">post</div>
               </div>
                   </div>
   </div>
@@ -180,13 +186,15 @@ ul.task-list li input[type="checkbox"] {
 <li>Processes run independently from each other. So processes that are set to run simultaneously will run in no particular order.</li>
 <li>Usually, the content of a channel is consumed only once.</li>
 <li>In a Nextflow script, first we need to define our parameters (data) and channels (actions). Then the codes for each process. And finally the workflow scope, where we indicate what we want to be done with our parameters and channels. (The order doesn’t have to be like this strictly.)</li>
+<li>We also need a <code>nextflow.config</code> file where we can choose <em>slurm</em> as the executor, how many cpus to use and the maximum run time. We can also set individual choices for each process.</li>
 </ul>
 <p><strong>nf-core</strong></p>
 <ul>
 <li>nf-core is a community built around Nextflow. There we can find several bioinformatics pipelines developed by volunteers with Nextflow.</li>
 <li>nf-core also provides processes as <em>modules</em>, if the whole pipeline is not required.</li>
 <li>We can access their pipelines <a href="https://nf-co.re/pipelines/%3E">here</a>. And the modules <a href="https://nf-co.re/modules/">here</a>.</li>
-<li>In order to run an nf-core pipeline, we have to go its website and click on <em>Launch version X</em>, where we will be taken to another page to enter parameters about our samples and process, and we will get the configuration file for our run..</li>
+<li>In order to run an nf-core pipeline, we have to go its website and click on <em>Launch version X</em>, where we will be taken to another page to enter parameters about our samples and process, and we will get a JSON file necessary for our run.</li>
+<li>We will also need an hpc2n.config file with our project ID information.</li>
 </ul>
 <blockquote class="blockquote">
 <p><strong>Note:</strong> This material was taken from the course’s webpage.</p>
