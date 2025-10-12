@@ -61,10 +61,48 @@
 
 
 
-<p>On the third day of the course, we worked with the workflow manager Netflow and nf-core pipelines, which are built around Nextflow. First, we copied the training material from the course. Then we run a script that did some basic commands, like breaking our input text into chunks of 6 characters, and capitalizing the letters or turning them backwards. For this, we learnt how the structure of a nextflow file should be and how to manipulate each part. Then we ran the script using pixi also. We learnt what each nextflow output file shows and why. Finally, we learnt how to clean up the working directory Nextflow generates when running our commands. Then, we tested an RNA sequencing analysis pipeline that is established in Nextflow. In the nextflow.config script we can set different parameters to be used in the further scripts, like for it to be executed with slurm, the default time limit for all processes and the project account. We then tried to run the first script that creates a transcriptome index file, using the tool salmon as a container. We couldn’t finish running this, as our cluster ran out of resources allocated for us. We learnt the theory behind nf-core, but couldn’t test it because of the resources.</p>
-<p>Afterwards, we had a discussion about the use of AI in bioinformatics. It was interesting to learn that most Swedish universities allow the use of AI in official students’ works as long as it is disclosed.</p>
+<section id="information-to-remember" class="level3">
+<h3 class="anchored" data-anchor-id="information-to-remember">Information to remember</h3>
+<p><strong>Workflow managers</strong></p>
+<ul>
+<li>Workflow managers, such as Nextflow and Snakemake, help us simplify several steps of a pipeline by ‘wrapping’ them up and running them automatically.</li>
+<li>This way, we only have to launch the pipeline with one command and the proper parameters, and it runs all the necessary steps until the result we wish. It avoids us having one script for every step we want to run.</li>
+<li>They can run containers to eliminate package installation conflicts.</li>
+<li>They make the processes more reproducible.</li>
+<li>In Nextflow, we assign as <em>channel</em> our information, such as data, input, output, etc. Each actual script is called <em>process</em> and can be written in any language. We assign our <em>workflow scope</em> by defining the order of the processes and the interaction with eachother.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://emiliamoralest.github.io/blog/posts/Day 3/images/nextflow.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Nextflow in a nutshell</figcaption>
+</figure>
+</div>
+<ul>
+<li>Nextflow is a Domain Specific Language (DSL) implemented as an extension of the Groovy programming language. This means that Nextflow can run any Groovy and Java code.</li>
+<li>If the pipeline fails at some point, the execution can be resumed easily from the spot since results are cached in the <code>work</code> folder. Once we’re done running the pipeline we should delete this, as can take up a lot of disk space.</li>
+<li>Processes run independently from each other. So processes that are set to run simultaneously will run in no particular order.</li>
+<li>Usually, the content of a channel is consumed only once.</li>
+<li>In a Nextflow script, first we need to define our parameters (data) and channels (actions). Then the codes for each process. And finally the workflow scope, where we indicate what we want to be done with our parameters and channels. (The order doesn’t have to be like this strictly.)</li>
+</ul>
+<p><strong>nf-core</strong></p>
+<ul>
+<li>nf-core is a community built around Nextflow. There we can find several bioinformatics pipelines developed by volunteers with Nextflow.</li>
+<li>nf-core also provides processes as <em>modules</em>, if the whole pipeline is not required.</li>
+<li>We can access their pipelines <a href="https://nf-co.re/pipelines/%3E">here</a>. And the modules <a href="https://nf-co.re/modules/">here</a>.</li>
+<li>In order to run an nf-core pipeline, we have to go its website and click on <em>Launch version X</em>, where we will be taken to another page to enter parameters about our samples and process, and we will get the configuration file for our run..</li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> This material was taken from the course’s webpage.</p>
+</blockquote>
+<hr>
+</section>
+<section id="what-we-did-today" class="level3">
+<h3 class="anchored" data-anchor-id="what-we-did-today">What we did today</h3>
+<p>On the third day of the course, we tested Netflow and nf-core. For Nextflow, first, we copied the training material from the course. Then we run a script that did some basic commands, like breaking our input text into chunks of 6 characters, and capitalizing the letters or turning them backwards. For this, we learnt how the structure of a nextflow file should be and how to manipulate each part. Then we ran the script using Pixi also. We learnt what each nextflow output file shows and why. Finally, we learnt how to clean up the working directory Nextflow generates when running our commands. Then, we tested an RNA sequencing analysis pipeline that is established in Nextflow. In the nextflow.config script we can set different parameters to be used in the further scripts, like for it to be executed with slurm, the default time limit for all processes and the project account. We then tried to run the first script that creates a transcriptome index file, using the tool salmon as a container. We couldn’t finish running this, as our cluster ran out of resources allocated for us. We learnt the theory behind nf-core, but couldn’t test it either because of the resources.</p>
+<p>Afterwards, we had a discussion about the use of AI in bioinformatics. It was interesting to learn that most Swedish universities allow the use of AI in official students’ works as long as it is disclosed. I think this is fair, as AI is widely integrated in our daily lives by now, and it’s not going anywhere. So we should learn to use it properly to our advantage instead of banning it.</p>
 
 
+</section>
 
  ]]></description>
   <category>news</category>
