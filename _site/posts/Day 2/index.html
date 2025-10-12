@@ -8,6 +8,7 @@
 
 <meta name="author" content="Emilia Morales">
 <meta name="dcterms.date" content="2025-10-07">
+<meta name="description" content="Tools that help with analysis reproducibility">
 
 <title>Day 2: Environments with Pixi, SLURM, containers and QC exercises – Personal Blog</title>
 <style>
@@ -155,7 +156,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Day 2: Environments with Pixi, SLURM, containers and QC exercises</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Tools that help with analysis reproducibility
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">post</div>
               </div>
                   </div>
@@ -345,7 +351,7 @@ If the software we want is not in a published container, we can build one as we 
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/emiliamoralest\.github\.io\/blog\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

@@ -1,5 +1,6 @@
 ---
 title: "Day 2: Environments with Pixi, SLURM, containers and QC exercises"
+description: "Tools that help with analysis reproducibility"
 author: "Emilia Morales"
 date: "2025-10-07"
 categories: [post]
