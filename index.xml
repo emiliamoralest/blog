@@ -31,16 +31,19 @@
 <p>After learning some theory behind ggplot2, the structure and some examples, we did some exercises ourselves by following a <a href="https://nbisweden.github.io/raukr-2023/labs/ggplot/">tutorial</a> from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots. Here are the resulting plots made by me:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://emiliamoralest.github.io/blog/posts/Day 5/images/scatterplot.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<p><img src="https://emiliamoralest.github.io/blog/posts/Day 5/images/scatterplot.png" class="img-fluid figure-img" style="width:100.0%"></p>
 <figcaption>Scatterplot</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://emiliamoralest.github.io/blog/posts/Day 5/images/heatmap.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<p><img src="https://emiliamoralest.github.io/blog/posts/Day 5/images/heatmap.png" class="img-fluid figure-img" style="width:100.0%"></p>
 <figcaption>Heatmap</figcaption>
 </figure>
 </div>
+<blockquote class="blockquote">
+<p>The corresponding code is in /Applied_Bioinformatics/ggplot_exercises.R</p>
+</blockquote>
 
 
 
@@ -64,7 +67,7 @@
 <h3 class="anchored" data-anchor-id="what-we-did-today">What we did today</h3>
 <p>Today we could run correctly the RNA-Seq pipeline with Nextflow and nf-core, as a continuation from yesterday.</p>
 <p><strong>Nextflow RNA-Seq pipeline</strong><br>
-We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don’t need to add them to Pixi, only <em>nextflow</em> must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script <em>script.nf</em> looked at the end:</p>
+We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don’t need to add them to Pixi, only <em>nextflow</em> must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script <em>script4.nf</em> looked at the end:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#!/usr/bin/env nextflow</span></span>
@@ -645,111 +648,116 @@ font-style: inherit;">'hpc2n2025-203'</span></span>
 <span id="cb2-24"><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
+<p>And we run the pipeline with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pixi</span> run nextflow run script4.nf</span></code></pre></div></div>
+<p>Or <code>pixi run nextflow run script4.nf --reads 'data/ggal/*_{1,2}.fq'</code> for overwriting the initial command and reading more files.</p>
 <p><strong>nf-core RNA-Seq pipeline</strong><br>
 Then we tested the <a href="https://nf-co.re/rnaseq/3.19.0">rnaseq</a> pipeline by nf-core, which was built with Nextflow. We used some of the RNA samples we had previously received, and ran the pipeline. We started by addind nextflow and nf-core to our Pixi environment. Then we went to the nf-core launcher in the website and added our data: absolute path of the dir of the <em>samplesheet.csv</em> file we created according to the instructions with input data informayion, and absolute path of the output dir. Then, we downloaded the needed reference genome files (fasta and gtf) and provided those paths to the launcher. Our resulting <em>nf-params.json</em> file looked like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="kw" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">{</span></span>
-<span id="cb3-2">    <span class="st" style="color: #20794D;
+<span id="cb4-2">    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"input"</span><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/samplesheet.csv"</span>,</span>
-<span id="cb3-3">    <span class="st" style="color: #20794D;
+<span id="cb4-3">    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"outdir"</span><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">".\/results"</span>,</span>
-<span id="cb3-4">    <span class="st" style="color: #20794D;
+<span id="cb4-4">    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"fasta"</span><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"</span>,</span>
-<span id="cb3-5">    <span class="st" style="color: #20794D;
+<span id="cb4-5">    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"gtf"</span><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.108.gtf"</span></span>
-<span id="cb3-6"><span class="kw" style="color: #003B4F;
+<span id="cb4-6"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">}</span></span></code></pre></div></div>
 <p>We also prepared the <em>hpc2n.config</em> file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">//</span> Config profile for HPC2N</span>
-<span id="cb4-2"><span class="ex" style="color: null;
+<span id="cb5-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">params</span> {</span>
-<span id="cb4-3">  <span class="ex" style="color: null;
+<span id="cb5-3">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">config_profile_description</span> = <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'Cluster profile for HPC2N'</span></span>
-<span id="cb4-4">  <span class="ex" style="color: null;
+<span id="cb5-4">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">config_profile_contact</span> = <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'Pedro Ojeda @pojeda'</span></span>
-<span id="cb4-5">  <span class="ex" style="color: null;
+<span id="cb5-5">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">config_profile_url</span> = <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'https://www.hpc2n.umu.se/'</span></span>
-<span id="cb4-6">  <span class="ex" style="color: null;
+<span id="cb5-6">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">project</span> = <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'hpc2n2025-203'</span></span>
-<span id="cb4-7">  <span class="ex" style="color: null;
+<span id="cb5-7">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">clusterOptions</span> = null</span>
-<span id="cb4-8">  <span class="ex" style="color: null;
+<span id="cb5-8">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">max_memory</span> = 128.GB</span>
-<span id="cb4-9">  <span class="ex" style="color: null;
+<span id="cb5-9">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">max_cpus</span> = 28</span>
-<span id="cb4-10">  <span class="ex" style="color: null;
+<span id="cb5-10">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">max_time</span> = 168.h</span>
-<span id="cb4-11">  <span class="ex" style="color: null;
+<span id="cb5-11">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">email</span> = <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'emilia.morales@ki.se'</span></span>
-<span id="cb4-12"><span class="er" style="color: #AD0000;
+<span id="cb5-12"><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb4-13"></span>
-<span id="cb4-14"><span class="ex" style="color: null;
+<span id="cb5-13"></span>
+<span id="cb5-14"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">singularity</span> {</span>
-<span id="cb4-15">  <span class="ex" style="color: null;
+<span id="cb5-15">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">enabled</span> = true</span>
-<span id="cb4-16"><span class="er" style="color: #AD0000;
+<span id="cb5-16"><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb4-17"></span>
-<span id="cb4-18"><span class="ex" style="color: null;
+<span id="cb5-17"></span>
+<span id="cb5-18"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">process</span> {</span>
-<span id="cb4-19">  <span class="ex" style="color: null;
+<span id="cb5-19">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">executor</span> = <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'slurm'</span></span>
-<span id="cb4-20">  <span class="ex" style="color: null;
+<span id="cb5-20">  <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">clusterOptions</span> = { <span class="st" style="color: #20794D;
 background-color: null;
@@ -766,11 +774,11 @@ background-color: null;
 font-style: inherit;">}</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span> }</span>
-<span id="cb4-21"><span class="er" style="color: #AD0000;
+<span id="cb5-21"><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 <p>The final command to run the whole pipeline is:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">pixi</span> run nextflow run nf-core/rnaseq <span class="at" style="color: #657422;
 background-color: null;
@@ -814,7 +822,7 @@ font-style: inherit;">-c</span> hpc2n.config</span></code></pre></div></div>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://emiliamoralest.github.io/blog/posts/Day 3/images/nextflow.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<p><img src="https://emiliamoralest.github.io/blog/posts/Day 3/images/nextflow.png" class="img-fluid figure-img" style="width:70.0%"></p>
 <figcaption>Nextflow in a nutshell</figcaption>
 </figure>
 </div>
@@ -1045,7 +1053,8 @@ font-weight: bold;
 font-style: inherit;">|</span> <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">lolcat</span>    </span></code></pre></div></div>
-<p>Then, to build the container we run <code>apptainer build lolcow.sif lolcow.def</code> and run it with <code>apptainer run lolcow.sif</code>. If we run instead <code>apptainer exec lolcow.sif bash -c "date|cowsay</code>, we get a date because with ‘exec’, the command we specify outside when running the container overrides the one inside. The cow speaks the truth sometimes. <img src="https://emiliamoralest.github.io/blog/posts/Day 2/images/cow.png" class="img-fluid"></p>
+<p>Then, to build the container we run <code>apptainer build lolcow.sif lolcow.def</code> and run it with <code>apptainer run lolcow.sif</code>. If we run instead <code>apptainer exec lolcow.sif bash -c "date|cowsay</code>, we get a date because with ‘exec’, the command we specify outside when running the container overrides the one inside. The cow speaks the truth sometimes.</p>
+<p><img src="https://emiliamoralest.github.io/blog/posts/Day 2/images/cow.png" class="img-fluid"></p>
 
 
 </section>

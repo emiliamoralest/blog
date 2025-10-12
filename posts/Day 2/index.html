@@ -272,7 +272,8 @@ If the software we want is not in a published container, we can build one as we 
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ex">%runscript</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="ex">fortune</span> <span class="kw">|</span> <span class="ex">cowsay</span> <span class="kw">|</span> <span class="ex">lolcat</span>    </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then, to build the container we run <code>apptainer build lolcow.sif lolcow.def</code> and run it with <code>apptainer run lolcow.sif</code>. If we run instead <code>apptainer exec lolcow.sif bash -c "date|cowsay</code>, we get a date because with ‘exec’, the command we specify outside when running the container overrides the one inside. The cow speaks the truth sometimes. <img src="images/cow.png" class="img-fluid"></p>
+<p>Then, to build the container we run <code>apptainer build lolcow.sif lolcow.def</code> and run it with <code>apptainer run lolcow.sif</code>. If we run instead <code>apptainer exec lolcow.sif bash -c "date|cowsay</code>, we get a date because with ‘exec’, the command we specify outside when running the container overrides the one inside. The cow speaks the truth sometimes.</p>
+<p><img src="images/cow.png" class="img-fluid"></p>
 
 
 </section>
