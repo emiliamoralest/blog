@@ -1,9 +1,184 @@
 ---
 title: "Day 4: RNA-Seq data analysis with Nextflow and nf-core pipelines"
+description: "Exercises with Nextflow and nf-core"
 author: "Emilia Morales"
 date: "2025-10-09"
-categories: [news]
-image: "chat.jpeg"
+categories: [post]
+image: "images/nf.png"
 ---
 
-Today we could run correctly the RNA-Seq pipeline with nextflow and nf-core. First, we tested the workflow manager nextflow by chaining the steps for qc and multiqc. Then we tested the 'rnaseq' pipeline by nf-core, which was built with nextflow. We used some of the RNA samples we had previously received, and ran the pipeline.
+### What we did today 
+Today we could run correctly the RNA-Seq pipeline with Nextflow and nf-core, as a continuation from yesterday. 
+
+**Nextflow RNA-Seq pipeline**  
+We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don't need to add them to Pixi, only *nextflow* must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script *script.nf* looked at the end:
+```bash
+#!/usr/bin/env nextflow
+
+/*
+ * pipeline input parameters
+ */
+params.reads = "$projectDir/data/ggal/gut_{1,2}.fq"
+params.transcriptome_file = "$projectDir/data/ggal/transcriptome.fa"
+params.multiqc = "$projectDir/multiqc"
+params.outdir = "results"
+
+log.info """\
+    R N A S E Q - N F   P I P E L I N E
+    ===================================
+    transcriptome: ${params.transcriptome_file}
+    reads        : ${params.reads}
+    outdir       : ${params.outdir}
+    """
+    .stripIndent()
+
+/*
+ * define the `INDEX` process that creates a binary index
+ * given the transcriptome file
+ */
+process INDEX {
+    input:
+    path transcriptome
+
+    output:
+    path 'salmon_index'
+
+    container 'https://depot.galaxyproject.org/singularity/salmon:1.10.1--h7e5ed60_0'
+    publishDir "$params.outdir/salmon"
+
+    script:
+    """
+    salmon index --threads $task.cpus -t $transcriptome -i salmon_index
+    """
+}
+
+process QUANTIFICATION {
+    input:
+    path salmon_index
+    tuple val(sample_id), path(reads)
+
+    output:
+    path "$sample_id"
+
+    container 'https://depot.galaxyproject.org/singularity/salmon:1.10.1--h7e5ed60_0'
+    publishDir "$params.outdir/salmon_quantification"
+
+    script:
+    """
+    salmon quant --threads $task.cpus --libType=U -i $salmon_index -1 ${reads[0]} -2 ${reads[1]} -o $sample_id
+    """
+}
+
+process FASTQC {
+    input:
+    tuple val(sample_id), path(reads)
+
+    output:
+    path "fastqc_${sample_id}"
+
+    container 'https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0'
+    publishDir "$params.outdir/fastqc"
+
+    script:
+    """
+    mkdir fastqc_${sample_id}
+    fastqc --noextract -o fastqc_${sample_id} ${reads[0]} ${reads[1]}
+    """
+}
+
+process MULTIQC {
+    input:
+    path '*'
+
+    output:
+    path "multiqc_report.html"
+
+    container 'community.wave.seqera.io/library/multiqc:1.31--1efbafd542a23882'
+    publishDir "$params.outdir/multiqc"
+
+    script:
+    """
+    multiqc .
+    """
+}
+
+workflow {
+    Channel
+        .fromFilePairs(params.reads, checkIfExists: true)
+        .set { read_pairs_ch }
+
+    index_ch = INDEX(params.transcriptome_file)
+    quant_ch = QUANTIFICATION(index_ch, read_pairs_ch)
+    fastqc_ch = FASTQC(read_pairs_ch)
+    MULTIQC(quant_ch.mix(fastqc_ch).collect())
+}
+```
+And our *nextflow.config* file looked like this:
+```bash
+process{
+    executor = "slurm"
+    time = '2.h'  // Set default time limit for all processes
+    
+    // Other settings
+    cpus = 4
+
+    withName:'INDEX'{
+        time = 15.m
+        cpus = 2
+    }
+
+    withName:'QUANTIFICATION'{
+        time = 10.m
+        cpus = 2
+    }
+}
+
+resume = true
+singularity.enabled = true
+
+executor {
+    account = 'hpc2n2025-203'
+}
+```
+
+**nf-core RNA-Seq pipeline**  
+Then we tested the [rnaseq](https://nf-co.re/rnaseq/3.19.0) pipeline by nf-core, which was built with Nextflow. We used some of the RNA samples we had previously received, and ran the pipeline. We started by addind nextflow and nf-core to our Pixi environment. Then we went to the nf-core launcher in the website and added our data: absolute path of the dir of the *samplesheet.csv* file we created according to the instructions with input data informayion, and absolute path of the output dir. Then, we downloaded the needed reference genome files (fasta and gtf) and provided those paths to the launcher. Our resulting *nf-params.json* file looked like this:
+```bash
+{
+    "input": "\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/samplesheet.csv",
+    "outdir": ".\/results",
+    "fasta": "\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa",
+    "gtf": "\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.108.gtf"
+}
+```
+We also prepared the *hpc2n.config* file:
+```bash
+// Config profile for HPC2N
+params {
+  config_profile_description = 'Cluster profile for HPC2N'
+  config_profile_contact = 'Pedro Ojeda @pojeda'
+  config_profile_url = 'https://www.hpc2n.umu.se/'
+  project = 'hpc2n2025-203'
+  clusterOptions = null
+  max_memory = 128.GB
+  max_cpus = 28
+  max_time = 168.h
+  email = 'emilia.morales@ki.se'
+}
+
+singularity {
+  enabled = true
+}
+
+process {
+  executor = 'slurm'
+  clusterOptions = { "-A $params.project ${params.clusterOptions ?: ''}" }
+}
+```
+
+The final command to run the whole pipeline is:
+```bash
+pixi run nextflow run nf-core/rnaseq -r 3.19.0 -resume -params-file nf-params.json -c hpc2n.config
+```
+
+After we are done running what we want, we can see the previous runs with `pixi run nextflow log`, and then clean up our working directory with `pixi run nextflow clean -f -before <run_name>` to keep the log of a run, or simply `pixi run nextflow clean -f` to clean everything.

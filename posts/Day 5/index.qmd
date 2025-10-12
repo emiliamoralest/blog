@@ -1,9 +1,21 @@
 ---
-title: "Day 5: ggplot2 and wrapup"
+title: "Day 5: ggplot2 and wrap-up"
+description: "Introduction to ggplot2 and course final remarks"
 author: "Emilia Morales"
 date: "2025-10-10"
-categories: [news]
-image: "chat.jpeg"
+categories: [post]
+image: "images/gg.png"
 ---
 
-On the final day of the course, we had a session about the R package ggplot2, which is widely used for making graphs as there are a lot of options to personalize. After learning some theory behind it, the structure and some examples, we did some exercises ourselves by following a tutorial from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots. 
+On the final day of the course, we had a session about the R package ggplot2, which is widely used for making graphs in R as there are a lot of options to personalize. Some useful links provided in the presentation:
+
+- ggplot2 extensions <https://exts.ggplot2.tidyverse.org/>
+- A curated list of awesome ggplot2 tutorials, packages etc. <https://github.com/erikgahner/awesome-ggplot2>
+- Official cheatsheet <https://ggplot2.tidyverse.org/reference/>
+- RStudio cheatsheets, including Quarto and several useful packages <https://posit.co/resources/cheatsheets/>
+
+After learning some theory behind ggplot2, the structure and some examples, we did some exercises ourselves by following a [tutorial](https://nbisweden.github.io/raukr-2023/labs/ggplot/) from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots. Here are the resulting plots made by me:
+
+![Scatterplot](images/scatterplot.png){width=60% fig-align="center"}
+
+![Heatmap](images/heatmap.png){width=70% fig-align="center"}

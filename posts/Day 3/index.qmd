@@ -1,9 +1,10 @@
 ---
 title: "Day 3: Nextflow, nf-core and AI in bioinformatics"
+description: "Introduction to workflow managers and AI talks"
 author: "Emilia Morales"
 date: "2025-10-08"
-categories: [news]
-image: "chat.jpeg"
+categories: [post]
+image: "images/chat.jpeg"
 ---
 
 ### Information to remember  
@@ -22,13 +23,16 @@ image: "chat.jpeg"
 - Processes run independently from each other. So processes that are set to run simultaneously will run in no particular order.
 - Usually, the content of a channel is consumed only once.
 - In a Nextflow script, first we need to define our parameters (data) and channels (actions). Then the codes for each process. And finally the workflow scope, where we indicate what we want to be done with our parameters and channels. (The order doesn't have to be like this strictly.)
+- We also need a `nextflow.config` file where we can choose *slurm* as the executor, how many cpus to use and the maximum run time. We can also set individual choices for each process.
 
 **nf-core**
 
 - nf-core is a community built around Nextflow. There we can find several bioinformatics pipelines developed by volunteers with Nextflow.
 - nf-core also provides processes as *modules*, if the whole pipeline is not required.
 - We can access their pipelines [here](https://nf-co.re/pipelines/>). And the modules [here](https://nf-co.re/modules/).
-- In order to run an nf-core pipeline, we have to go its website and click on *Launch version X*, where we will be taken to another page to enter parameters about our samples and process, and we will get the configuration file for our run..
+- In order to run an nf-core pipeline, we have to go its website and click on *Launch version X*, where we will be taken to another page to enter parameters about our samples and process, and we will get a JSON file necessary for our run. 
+- We will also need an hpc2n.config file with our project ID information.
+- **Important:** nf-core configs ready for UPPMAX <https://nf-co.re/configs/uppmax/>
 
 > **Note:** This material was taken from the course's webpage.
 
