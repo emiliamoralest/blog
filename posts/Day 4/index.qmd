@@ -11,7 +11,7 @@ image: "images/nf.png"
 Today we could run correctly the RNA-Seq pipeline with Nextflow and nf-core, as a continuation from yesterday. 
 
 **Nextflow RNA-Seq pipeline**  
-We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don't need to add them to Pixi, only *nextflow* must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script *script.nf* looked at the end:
+We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don't need to add them to Pixi, only *nextflow* must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script *script4.nf* looked at the end:
 ```bash
 #!/usr/bin/env nextflow
 
@@ -140,6 +140,11 @@ executor {
     account = 'hpc2n2025-203'
 }
 ```
+And we run the pipeline with:
+```bash
+pixi run nextflow run script4.nf
+```
+Or `pixi run nextflow run script4.nf --reads 'data/ggal/*_{1,2}.fq'` for overwriting the initial command and reading more files.
 
 **nf-core RNA-Seq pipeline**  
 Then we tested the [rnaseq](https://nf-co.re/rnaseq/3.19.0) pipeline by nf-core, which was built with Nextflow. We used some of the RNA samples we had previously received, and ran the pipeline. We started by addind nextflow and nf-core to our Pixi environment. Then we went to the nf-core launcher in the website and added our data: absolute path of the dir of the *samplesheet.csv* file we created according to the instructions with input data informayion, and absolute path of the output dir. Then, we downloaded the needed reference genome files (fasta and gtf) and provided those paths to the launcher. Our resulting *nf-params.json* file looked like this:

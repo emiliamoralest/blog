@@ -97,4 +97,5 @@ From: ubuntu:20.04
     fortune | cowsay | lolcat    
 ```
 Then, to build the container we run `apptainer build lolcow.sif lolcow.def` and run it with `apptainer run lolcow.sif`. If we run instead `apptainer exec lolcow.sif bash -c "date|cowsay`, we get a date because with 'exec', the command we specify outside when running the container overrides the one inside. The cow speaks the truth sometimes.
+
 ![](images/cow.png)

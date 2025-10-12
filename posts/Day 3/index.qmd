@@ -16,7 +16,7 @@ image: "images/chat.jpeg"
 - They make the processes more reproducible.
 - In Nextflow, we assign as *channel* our information, such as data, input, output, etc. Each actual script is called *process* and can be written in any language. We assign our *workflow scope* by defining the order of the processes and the interaction with eachother.
 
-![Nextflow in a nutshell](images/nextflow.png){width=60% fig-align="center"}
+![Nextflow in a nutshell](images/nextflow.png){width=70% fig-align="center"}
 
 - Nextflow is a Domain Specific Language (DSL) implemented as an extension of the Groovy programming language. This means that Nextflow can run any Groovy and Java code.
 - If the pipeline fails at some point, the execution can be resumed easily from the spot since results are cached in the `work` folder. Once we're done running the pipeline we should delete this, as can take up a lot of disk space.

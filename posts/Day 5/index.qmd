@@ -16,6 +16,8 @@ On the final day of the course, we had a session about the R package ggplot2, wh
 
 After learning some theory behind ggplot2, the structure and some examples, we did some exercises ourselves by following a [tutorial](https://nbisweden.github.io/raukr-2023/labs/ggplot/) from NBIS. With this, we had a more basic exercise, and two more complex ones where we tried to recreate some public plots. Here are the resulting plots made by me:
 
-![Scatterplot](images/scatterplot.png){width=60% fig-align="center"}
+![Scatterplot](images/scatterplot.png){width=100% fig-align="center"}
 
-![Heatmap](images/heatmap.png){width=70% fig-align="center"}
+![Heatmap](images/heatmap.png){width=100% fig-align="center"}
+
+> The corresponding code is in /Applied_Bioinformatics/ggplot_exercises.R

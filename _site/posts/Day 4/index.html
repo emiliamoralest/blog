@@ -203,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="what-we-did-today">What we did today</h3>
 <p>Today we could run correctly the RNA-Seq pipeline with Nextflow and nf-core, as a continuation from yesterday.</p>
 <p><strong>Nextflow RNA-Seq pipeline</strong><br>
-We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don’t need to add them to Pixi, only <em>nextflow</em> must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script <em>script.nf</em> looked at the end:</p>
+We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcriptome fi, does QC, performs quantification and creates a multiqc report. For this, we will create a Pixi environment and add the tools we need, starting with nextflow, salmon, fastqc. Although if we use the containers (recommended), we don’t need to add them to Pixi, only <em>nextflow</em> must be there. For our pipeline, we need to establish that the last step, multiqc, needs to wait for the results of the quantification and fastqc steps. This is how our script <em>script4.nf</em> looked at the end:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env nextflow</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/*</span></span>
@@ -328,38 +328,41 @@ We want to create a Nextflow pipeline for RNA-Seq data, which indexes a transcri
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ex">executor</span> {</span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="ex">account</span> = <span class="st">'hpc2n2025-203'</span></span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And we run the pipeline with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run nextflow run script4.nf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Or <code>pixi run nextflow run script4.nf --reads 'data/ggal/*_{1,2}.fq'</code> for overwriting the initial command and reading more files.</p>
 <p><strong>nf-core RNA-Seq pipeline</strong><br>
 Then we tested the <a href="https://nf-co.re/rnaseq/3.19.0">rnaseq</a> pipeline by nf-core, which was built with Nextflow. We used some of the RNA samples we had previously received, and ran the pipeline. We started by addind nextflow and nf-core to our Pixi environment. Then we went to the nf-core launcher in the website and added our data: absolute path of the dir of the <em>samplesheet.csv</em> file we created according to the instructions with input data informayion, and absolute path of the output dir. Then, we downloaded the needed reference genome files (fasta and gtf) and provided those paths to the launcher. Our resulting <em>nf-params.json</em> file looked like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"input"</span><span class="ex">:</span> <span class="st">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/samplesheet.csv"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"outdir"</span><span class="ex">:</span> <span class="st">".\/results"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fasta"</span><span class="ex">:</span> <span class="st">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gtf"</span><span class="ex">:</span> <span class="st">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.108.gtf"</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"input"</span><span class="ex">:</span> <span class="st">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/samplesheet.csv"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"outdir"</span><span class="ex">:</span> <span class="st">".\/results"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fasta"</span><span class="ex">:</span> <span class="st">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gtf"</span><span class="ex">:</span> <span class="st">"\/proj\/nobackup\/medbioinfo2025\/emilia_morales\/nf-core-rnaseq\/reference\/Homo_sapiens.GRCh38.108.gtf"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We also prepared the <em>hpc2n.config</em> file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">//</span> Config profile for HPC2N</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">params</span> {</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">config_profile_description</span> = <span class="st">'Cluster profile for HPC2N'</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">config_profile_contact</span> = <span class="st">'Pedro Ojeda @pojeda'</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">config_profile_url</span> = <span class="st">'https://www.hpc2n.umu.se/'</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">project</span> = <span class="st">'hpc2n2025-203'</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">clusterOptions</span> = null</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">max_memory</span> = 128.GB</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">max_cpus</span> = 28</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">max_time</span> = 168.h</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">email</span> = <span class="st">'emilia.morales@ki.se'</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> {</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">enabled</span> = true</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ex">process</span> {</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">executor</span> = <span class="st">'slurm'</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="ex">clusterOptions</span> = { <span class="st">"-A </span><span class="va">$params</span><span class="st">.project </span><span class="va">${params</span><span class="er">.clusterOptions ?: ''</span><span class="va">}</span><span class="st">"</span> }</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">//</span> Config profile for HPC2N</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">params</span> {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">config_profile_description</span> = <span class="st">'Cluster profile for HPC2N'</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">config_profile_contact</span> = <span class="st">'Pedro Ojeda @pojeda'</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">config_profile_url</span> = <span class="st">'https://www.hpc2n.umu.se/'</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">project</span> = <span class="st">'hpc2n2025-203'</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">clusterOptions</span> = null</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">max_memory</span> = 128.GB</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">max_cpus</span> = 28</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">max_time</span> = 168.h</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">email</span> = <span class="st">'emilia.morales@ki.se'</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> {</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">enabled</span> = true</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="ex">process</span> {</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">executor</span> = <span class="st">'slurm'</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="ex">clusterOptions</span> = { <span class="st">"-A </span><span class="va">$params</span><span class="st">.project </span><span class="va">${params</span><span class="er">.clusterOptions ?: ''</span><span class="va">}</span><span class="st">"</span> }</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The final command to run the whole pipeline is:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run nextflow run nf-core/rnaseq <span class="at">-r</span> 3.19.0 <span class="at">-resume</span> <span class="at">-params-file</span> nf-params.json <span class="at">-c</span> hpc2n.config</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run nextflow run nf-core/rnaseq <span class="at">-r</span> 3.19.0 <span class="at">-resume</span> <span class="at">-params-file</span> nf-params.json <span class="at">-c</span> hpc2n.config</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>After we are done running what we want, we can see the previous runs with <code>pixi run nextflow log</code>, and then clean up our working directory with <code>pixi run nextflow clean -f -before &lt;run_name&gt;</code> to keep the log of a run, or simply <code>pixi run nextflow clean -f</code> to clean everything.</p>
 
 
